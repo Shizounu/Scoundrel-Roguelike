@@ -26,9 +26,9 @@ public class PlayerManager : MonoBehaviour {
     }
 
     [Header("Equipment Card")]
-    [SerializeField] private bool useEquipment; 
-    [SerializeField] private BaseCard equipment;
-    [SerializeField] private List<BaseCard> defeatedMonsters;
+    public bool useEquipment; 
+    public BaseCard equipment;
+    public List<BaseCard> defeatedMonsters;
 
     private void Start()
     {
@@ -63,11 +63,15 @@ public class PlayerManager : MonoBehaviour {
             Health -= monsterCard.PointValue;
         }
     }
-    public int GetDurability() => defeatedMonsters[^1].PointValue;
+    public int GetDurability() => defeatedMonsters.Count > 0 ? defeatedMonsters[^1].PointValue : int.MaxValue;
     public void DrawUntilRoomSize()
     {
         while(CurrentCards.Count < MaxRoomSize) {
             CurrentCards.Add(CurrentDeck.DrawCard());
         }
+    }
+    public void ToggleUseEquipment()
+    {
+        useEquipment = !useEquipment;
     }
 }

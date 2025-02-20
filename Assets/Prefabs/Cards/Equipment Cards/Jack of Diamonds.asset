@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Jack of Diamonds
   m_EditorClassIdentifier: 
   _CardName: Jack of Diamonds
-  _CardSprite: {fileID: -2255316151519851609, guid: e27877b49c4a56c4f9cfae6c0258fa1d, type: 3}
+  _CardSprite: {fileID: -4162618455230226991, guid: cfca64a34f6d68d499a31ccd08bc31bf, type: 3}
   _PointValue: 10

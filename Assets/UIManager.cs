@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Cards.Implementation.Cards;
 
 public class UIManager : MonoBehaviour {
     public PlayerManager playerManager;
     public List<int> CurrentSelection = new();
 
-    [Header("UI Object References")]
+    [Header("Room Cards")]
     public CardSlot CardSlot0 = new();
     public CardSlot CardSlot1 = new();
     public CardSlot CardSlot2 = new();
@@ -14,13 +15,17 @@ public class UIManager : MonoBehaviour {
     [Space(), Header("Color Reference")]
     public Color SoloSelectColor;
     public Color MultiSelectColor;
+    public Color UnableToCombatColor;
+
+    [Header("Equipment")]
+    public CardSlot EquipmentCard;
+    public Image highestCard;
 
     private void LateUpdate()
     {
         //Update Visuals
         for (int i = 0; i < playerManager.MaxRoomSize; i++) {
-            if (i < playerManager.CurrentCards.Count)
-            {
+            if (i < playerManager.CurrentCards.Count) {
                 IndexToSlot(i).Image.sprite = playerManager.CurrentCards[i].CardSprite;
                 IndexToSlot(i).SetVisible();
             } else {
@@ -28,11 +33,31 @@ public class UIManager : MonoBehaviour {
             }
             IndexToSlot(i).SetUnselected();
         }
+        if (playerManager.equipment != null) {
+            EquipmentCard.UpdateSprite(playerManager.equipment.CardSprite);
+            EquipmentCard.SetVisible();
+        } else {
+            EquipmentCard.SetInvisible();
+        }
 
-        foreach (int index in CurrentSelection) {
-            if(CurrentSelection.Count == 1) {
-                IndexToSlot(index).SetSoloSelected(SoloSelectColor);
-            } else {
+        if(playerManager.defeatedMonsters.Count > 0) {
+            highestCard.enabled = true; 
+            highestCard.sprite = playerManager.defeatedMonsters[^1].CardSprite;
+        } else {
+            highestCard.enabled = false; 
+        }
+
+        foreach (int index in CurrentSelection)
+        {
+            if (CurrentSelection.Count == 1) {
+                if(playerManager.useEquipment && playerManager.CurrentCards[index].GetType() == typeof(MonsterCard) && playerManager.GetDurability() <= playerManager.CurrentCards[index].PointValue)
+                    IndexToSlot(index).SetUnableToCombat(UnableToCombatColor);
+                else
+                    IndexToSlot(index).SetSoloSelected(SoloSelectColor);
+                
+            }
+            else
+            {
                 IndexToSlot(index).SetMultiSelected(MultiSelectColor);
             }
         }
@@ -67,6 +92,10 @@ public class UIManager : MonoBehaviour {
         else
             CurrentSelection.Add(index);
     }
+    public void ToggleUseEquipment()
+    {
+        EquipmentCard.ActivateButtonImage.enabled = !EquipmentCard.ActivateButtonImage.enabled;
+    }
 }
 
 [System.Serializable]
@@ -83,18 +112,25 @@ public class CardSlot
     }
 
     public void SetInvisible() {
-        Image.color = new Color(1, 1, 1, 0);
+        Image.enabled = false;
         Button.enabled = false;
     }
     public void SetVisible()
     {
-        Image.color = new Color(1, 1, 1, 1);
+        Image.enabled = true;
         Button.enabled = true;
     }
     public void SetSoloSelected(Color soloSelectColor)
     {
         ActivateButton.gameObject.SetActive(true);
+        ActivateButton.interactable = true;
         ActivateButtonImage.color = soloSelectColor;
+    }
+    public void SetUnableToCombat(Color unableToCombat)
+    {
+        ActivateButton.gameObject.SetActive(true);
+        ActivateButton.interactable = false;
+        ActivateButtonImage.color = unableToCombat;
     }
     public void SetMultiSelected(Color multiSelectColor)
     {
