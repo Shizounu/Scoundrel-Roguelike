@@ -2,6 +2,7 @@ using Cards;
 using UnityEngine;
 using Cards.Implementation.Cards;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 public class PlayerManager : MonoBehaviour {
     [Header("Dungeon")]
     [SerializeField] private Deck DeckDefinition;
@@ -34,6 +35,14 @@ public class PlayerManager : MonoBehaviour {
         CurrentDeck = Instantiate(DeckDefinition);
         CurrentDeck.Shuffle();
         DrawUntilRoomSize();
+    }
+
+    public void UseCardAtIndex(int index)
+    {
+        CurrentCards[index].OnActivate(this);
+        CurrentCards.RemoveAt(index);
+        if (CurrentCards.Count == 1)
+            DrawUntilRoomSize();
     }
 
     public void Heal(int Amount)

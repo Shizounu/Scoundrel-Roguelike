@@ -18,8 +18,8 @@ public class UIManager : MonoBehaviour {
     private void LateUpdate()
     {
         //Update Visuals
-        for (int i = 0; i < playerManager.CurrentCards.Count; i++) {
-            if (playerManager.CurrentCards[i] != null)
+        for (int i = 0; i < playerManager.MaxRoomSize; i++) {
+            if (i < playerManager.CurrentCards.Count)
             {
                 IndexToSlot(i).Image.sprite = playerManager.CurrentCards[i].CardSprite;
                 IndexToSlot(i).SetVisible();
@@ -38,6 +38,17 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+
+    public void ClearSelection()
+    {
+        /*
+        IndexToSlot(0).SetUnselected();
+        IndexToSlot(1).SetUnselected();
+        IndexToSlot(2).SetUnselected();
+        IndexToSlot(3).SetUnselected();
+        */
+        CurrentSelection.Clear();
+    }
     public CardSlot IndexToSlot(int index)
     {
         return index switch
@@ -49,8 +60,6 @@ public class UIManager : MonoBehaviour {
             _ => throw new System.IndexOutOfRangeException(),
         };
     }
-
-
     public void SwapSelection(int index)
     {
         if (CurrentSelection.Contains(index))
