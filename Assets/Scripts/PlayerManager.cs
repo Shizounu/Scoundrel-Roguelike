@@ -10,10 +10,11 @@ public class PlayerManager : MonoBehaviour {
 
     public List<BaseCard> CurrentCards;
     public int MaxRoomSize = 4;
+    public bool hasFledLastRoom;
 
     [Header("Health")]
     [SerializeField] private int CurrentHealth = 20;
-    [SerializeField] private int MaxHealth = 20;
+    [SerializeField] public int MaxHealth = 20;
     public int Health
     {
         get => CurrentHealth;
@@ -69,9 +70,22 @@ public class PlayerManager : MonoBehaviour {
         while(CurrentCards.Count < MaxRoomSize) {
             CurrentCards.Add(CurrentDeck.DrawCard());
         }
+        hasFledLastRoom = false;
     }
     public void ToggleUseEquipment()
     {
         useEquipment = !useEquipment;
+    }
+    public void FleeRoom()
+    {
+        if (hasFledLastRoom)
+            return;
+        while (CurrentCards.Count > 0)
+        {
+            CurrentDeck.Cards.Add(CurrentCards[0]);
+            CurrentCards.RemoveAt(0);
+        }
+        DrawUntilRoomSize();
+        hasFledLastRoom = true; 
     }
 }

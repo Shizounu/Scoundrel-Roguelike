@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Cards.Implementation.Cards;
+using TMPro;
 
 public class UIManager : MonoBehaviour {
     public PlayerManager playerManager;
@@ -12,15 +13,19 @@ public class UIManager : MonoBehaviour {
     public CardSlot CardSlot1 = new();
     public CardSlot CardSlot2 = new();
     public CardSlot CardSlot3 = new();
+
+    [Header("Equipment and Health")]
+    public CardSlot EquipmentCard;
+    public Image highestCard;
+    [Space()]
+    public Image healthImage;
+    public TextMeshProUGUI text;
+
     [Space(), Header("Color Reference")]
     public Color SoloSelectColor;
     public Color MultiSelectColor;
     public Color UnableToCombatColor;
-
-    [Header("Equipment")]
-    public CardSlot EquipmentCard;
-    public Image highestCard;
-
+    public Gradient HealthColorGradient;
     private void LateUpdate()
     {
         //Update Visuals
@@ -61,6 +66,9 @@ public class UIManager : MonoBehaviour {
                 IndexToSlot(index).SetMultiSelected(MultiSelectColor);
             }
         }
+
+        text.text = $"{playerManager.Health}";
+        healthImage.color = HealthColorGradient.Evaluate((float)playerManager.Health / playerManager.MaxHealth);
     }
 
 
