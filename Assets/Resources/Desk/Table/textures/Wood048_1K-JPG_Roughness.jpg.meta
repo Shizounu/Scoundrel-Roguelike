@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Wood048_1K-JPG_Roughness_0: 6872340930331659328
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
